@@ -17,7 +17,11 @@
       {
         "command": "debuglearning.addbutton",
         "title": "Add questions"
-      }
+      },
+      {
+        "command": "input-display-webview.inputData",
+        "title": "Input Display"
+    }
     ]
   },
   "scripts": {
