@@ -21,7 +21,11 @@
       {
         "command": "input-display-webview.inputData",
         "title": "Input Display"
-    }
+      },
+      {
+        "command": "behavior-tracker.displayBehaviors",
+        "title": "Behavior Display"
+      }
     ]
   },
   "scripts": {

@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-
+let panel: vscode.WebviewPanel | undefined;
 export function activate(context: vscode.ExtensionContext) {
     console.log('Congratulations, your extension "input-display-webview" is now active!');
 
@@ -20,8 +20,41 @@ export function activate(context: vscode.ExtensionContext) {
                 switch (message.command) {
 
                     case 'showInput':
-						console.log(message);
+						
                         vscode.window.showInformationMessage(`You entered: ${message.text}`);
+                        break;
+                }
+            },
+            undefined,
+            context.subscriptions
+        );
+        
+        vscode.workspace.onDidChangeTextDocument(event => {
+            if (panel) {
+                const behavior = `Text changed: ${event.document.getText()}`;
+                panel.webview.postMessage({
+                  command: 'behaviorInfo',
+                  info: behavior
+                });
+            }
+        });
+
+        vscode.languages.registerCodeActionsProvider("*", {
+            provideCodeActions(document, range, context, token) {
+                const behavior = `Code action performed: ${context.diagnostics[0].message}`;
+                panel.webview.postMessage({
+                  command: 'behaviorInfo',
+                  info: behavior
+                });
+                return [];
+            }
+        });
+
+        panel.webview.onDidReceiveMessage(
+            message => {
+                switch (message.command) {
+                    case 'behaviorInfo':
+                        vscode.window.showInformationMessage(`User behavior: ${message.info}`);
                         break;
                 }
             },
@@ -31,6 +64,8 @@ export function activate(context: vscode.ExtensionContext) {
     });
 
     context.subscriptions.push(disposable);
+    
+
 }
 
 function getWebviewContent() {
@@ -47,6 +82,8 @@ function getWebviewContent() {
         <div id="msg">
             <pre></pre>
         </div>
+        <div id="behavior-info">
+        </div>
         <script>
             let questions = [];
             function addQuestion() {
@@ -62,6 +99,15 @@ function getWebviewContent() {
             }
             const vscode = acquireVsCodeApi();
             document.getElementById('submitButton').addEventListener("click", addQuestion);
+            window.addEventListener('message', (event) => {
+                const message = event.data; // The message data is contained in the event data property
+                switch (message.command) {
+                  case 'behaviorInfo':
+                    // Update the UI with the information about the user behavior
+                    document.getElementById('behavior-info').innerText = message.info;
+                    break;
+                }
+            });
 
 
         </script>

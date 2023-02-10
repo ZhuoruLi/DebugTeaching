@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Input Display Webview</title>
+    </head>
+    <body>
+        <input type="text" id="inputBox">
+        <button id="submitButton">Submit</button>
+        <div id="msg">
+            <pre></pre>
+        </div>
+        <div id="debug-info">
+        </div>
+        <script>
+            let questions = [];
+            function addQuestion() {
+                const question = document.getElementById('inputBox').value;
+                questions.push(question);
+                let pre = document.querySelector('#msg pre');
+                pre.textContent = JSON.stringify(questions, '\t', 2);
+                vscode.postMessage({
+                    command: 'showInput',
+                    text:  question
+                })
+
+            }
+            const vscode = acquireVsCodeApi();
+            document.getElementById('submitButton').addEventListener("click", addQuestion);
+            window.addEventListener('message', (event) => {
+                const message = event.data; // The message data is contained in the event data property
+                switch (message.command) {
+                  case 'debugInfo':
+                    // Update the UI with the information about the current debugging session
+                    document.getElementById('debug-info').innerText = message.info;
+                    break;
+                }
+            });
+
+        </script>
+    </body>
+</html>
