@@ -44,13 +44,21 @@ function getWebviewContent() {
     <body>
         <input type="text" id="inputBox">
         <button id="submitButton">Submit</button>
+        <div id="msg">
+            <pre></pre>
+        </div>
         <script>
+            let questions = [];
             function addQuestion() {
                 const question = document.getElementById('inputBox').value;
+                questions.push(question);
+                let pre = document.querySelector('#msg pre');
+                pre.textContent = JSON.stringify(questions, '\t', 2);
                 vscode.postMessage({
                     command: 'showInput',
                     text:  question
                 })
+
             }
             const vscode = acquireVsCodeApi();
             document.getElementById('submitButton').addEventListener("click", addQuestion);
