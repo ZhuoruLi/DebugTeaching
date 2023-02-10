@@ -17,7 +17,6 @@ export function activate(context: vscode.ExtensionContext) {
 
         panel.webview.onDidReceiveMessage(
             message => {
-				console.log(message);
                 switch (message.command) {
 
                     case 'showInput':
@@ -46,14 +45,17 @@ function getWebviewContent() {
         <input type="text" id="inputBox">
         <button id="submitButton">Submit</button>
         <script>
-            const vscode = acquireVsCodeApi();
-            document.getElementById("text").addEventListener("click", () => {
-                const inputBox = document.getElementById("inputBox") as HTMLInputElement;
+            function addQuestion() {
+                const question = document.getElementById('inputBox').value;
                 vscode.postMessage({
                     command: 'showInput',
-                    text: inputBox.value
-                });
-            });
+                    text:  question
+                })
+            }
+            const vscode = acquireVsCodeApi();
+            document.getElementById('submitButton').addEventListener("click", addQuestion);
+
+
         </script>
     </body>
     </html>`;
