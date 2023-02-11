@@ -40,7 +40,7 @@ export function activate(context: vscode.ExtensionContext) {
                   info: behavior
                 });
             }
-            console.log('hello from zhuoru');
+            
         });
 
         vscode.languages.registerCodeActionsProvider("*", {
