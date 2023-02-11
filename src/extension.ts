@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-let panel: vscode.WebviewPanel | undefined;
+//let panel: vscode.WebviewPanel | undefined;
 export function activate(context: vscode.ExtensionContext) {
     console.log('Congratulations, your extension "input-display-webview" is now active!');
 
@@ -23,6 +23,9 @@ export function activate(context: vscode.ExtensionContext) {
 						
                         vscode.window.showInformationMessage(`You entered: ${message.text}`);
                         break;
+                    case 'behaviorInfo':
+                        vscode.window.showInformationMessage(`User behavior: ${message.info}`);
+                        break;
                 }
             },
             undefined,
@@ -37,6 +40,7 @@ export function activate(context: vscode.ExtensionContext) {
                   info: behavior
                 });
             }
+            console.log('hello from zhuoru');
         });
 
         vscode.languages.registerCodeActionsProvider("*", {
@@ -50,17 +54,17 @@ export function activate(context: vscode.ExtensionContext) {
             }
         });
 
-        panel.webview.onDidReceiveMessage(
-            message => {
-                switch (message.command) {
-                    case 'behaviorInfo':
-                        vscode.window.showInformationMessage(`User behavior: ${message.info}`);
-                        break;
-                }
-            },
-            undefined,
-            context.subscriptions
-        );
+        // panel.webview.onDidReceiveMessage(
+        //     message => {
+        //         switch (message.command) {
+        //             case 'behaviorInfo':
+        //                 vscode.window.showInformationMessage(`User behavior: ${message.info}`);
+        //                 break;
+        //         }
+        //     },
+        //     undefined,
+        //     context.subscriptions
+        // );
     });
 
     context.subscriptions.push(disposable);
