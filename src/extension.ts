@@ -80,14 +80,7 @@ export function activate(context: vscode.ExtensionContext) {
                 return [];
             }
         });
-        async function writeDataToFile(data: any) {
-            const fileName = `data.txt`;
-            const filePath = vscode.Uri.file(fileName);
-            const dataString = JSON.stringify(data);
-        
-            // Write the data to a file in the workspace
-            await vscode.workspace.fs.writeFile(filePath, Buffer.from(dataString));
-        }
+
 
 
     });
