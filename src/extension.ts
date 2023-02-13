@@ -23,48 +23,57 @@ export function activate(context: vscode.ExtensionContext) {
 						
                         vscode.window.showInformationMessage(`You entered: ${message.text}`);
                         break;
-                    case 'behaviorInfo':
+                    case 'behaviorInfo1':
                         vscode.window.showInformationMessage(`User behavior: ${message.info}`);
                         break;
+                    case 'behaviorInfo2':
+                        vscode.window.showInformationMessage(`User behavior: ${message.info}`);
                 }
             },
             undefined,
             context.subscriptions
         );
         
+        // vscode.workspace.onDidChangeTextDocument(event => {
+        //     if (panel) {
+        //         const behavior = `Text changed: ${event.document.getText()}`;
+        //         panel.webview.postMessage({
+        //           command: 'behaviorInfo',
+        //           info: behavior
+        //         });
+        //     }
+            
+        // });
+        let toprint:string  = "";
+        let currentline:number = -1;
         vscode.workspace.onDidChangeTextDocument(event => {
             if (panel) {
-                const behavior = `Text changed: ${event.document.getText()}`;
+                const line = event.contentChanges[0].range.start.line;
+                if (currentline !== line) {
+                    toprint = "";
+                    currentline = line;
+                }
+                toprint += event.contentChanges[0].text;
+                const behavior = `Line ${line} changed: "${toprint}"`;
                 panel.webview.postMessage({
-                  command: 'behaviorInfo',
+                  command: 'behaviorInfo1',
                   info: behavior
                 });
             }
-            
         });
 
         vscode.languages.registerCodeActionsProvider("*", {
             provideCodeActions(document, range, context, token) {
                 const behavior = `Code action performed: ${context.diagnostics[0].message}`;
                 panel.webview.postMessage({
-                  command: 'behaviorInfo',
+                  command: 'behaviorInfo2',
                   info: behavior
                 });
                 return [];
             }
         });
 
-        // panel.webview.onDidReceiveMessage(
-        //     message => {
-        //         switch (message.command) {
-        //             case 'behaviorInfo':
-        //                 vscode.window.showInformationMessage(`User behavior: ${message.info}`);
-        //                 break;
-        //         }
-        //     },
-        //     undefined,
-        //     context.subscriptions
-        // );
+
     });
 
     context.subscriptions.push(disposable);
@@ -86,7 +95,9 @@ function getWebviewContent() {
         <div id="msg">
             <pre></pre>
         </div>
-        <div id="behavior-info">
+        <div id="behavior-info1">
+        </div>
+        <div id="behavior-info2">
         </div>
         <script>
             let questions = [];
@@ -106,10 +117,13 @@ function getWebviewContent() {
             window.addEventListener('message', (event) => {
                 const message = event.data; // The message data is contained in the event data property
                 switch (message.command) {
-                  case 'behaviorInfo':
-                    // Update the UI with the information about the user behavior
-                    document.getElementById('behavior-info').innerText = message.info;
-                    break;
+                    case 'behaviorInfo1':
+                        // Update the UI with the information about the user behavior
+                        document.getElementById('behavior-info1').innerText = message.info;
+                        break;
+                    case 'behaviorInfo2':
+                        document.getElementById('behavior-info2').innerText = message.info;
+                        break;
                 }
             });
 
