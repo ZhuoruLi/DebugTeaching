@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+let behaviorData: string[] = [];
 //let panel: vscode.WebviewPanel | undefined;
 export function activate(context: vscode.ExtensionContext) {
     console.log('Congratulations, your extension "input-display-webview" is now active!');
@@ -24,10 +25,14 @@ export function activate(context: vscode.ExtensionContext) {
                         vscode.window.showInformationMessage(`You entered: ${message.text}`);
                         break;
                     case 'behaviorInfo1':
-                        vscode.window.showInformationMessage(`User behavior: ${message.info}`);
+                        vscode.window.showInformationMessage(`Line edit: ${message.info}`);
                         break;
                     case 'behaviorInfo2':
                         vscode.window.showInformationMessage(`User behavior: ${message.info}`);
+                    case 'saveData':
+                        saveData();
+                        break;
+                
                 }
             },
             undefined,
@@ -49,7 +54,10 @@ export function activate(context: vscode.ExtensionContext) {
         vscode.workspace.onDidChangeTextDocument(event => {
             if (panel) {
                 const line = event.contentChanges[0].range.start.line;
+                //when change the line, print what changes to the new line, 
+                //also store the current string;
                 if (currentline !== line) {
+                    behaviorData.push(toprint);
                     toprint = "";
                     currentline = line;
                 }
@@ -72,6 +80,14 @@ export function activate(context: vscode.ExtensionContext) {
                 return [];
             }
         });
+        async function writeDataToFile(data: any) {
+            const fileName = `data.txt`;
+            const filePath = vscode.Uri.file(fileName);
+            const dataString = JSON.stringify(data);
+        
+            // Write the data to a file in the workspace
+            await vscode.workspace.fs.writeFile(filePath, Buffer.from(dataString));
+        }
 
 
     });
@@ -79,6 +95,22 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(disposable);
     
 
+}
+async function saveData() {
+    if (!vscode.workspace.workspaceFolders) {
+      vscode.window.showErrorMessage("No workspace folder is opened in VS Code.");
+      return;
+    }
+  
+    const filePath = vscode.Uri.joinPath(vscode.workspace.workspaceFolders[0].uri, 'behavior-track.txt');
+    const content = behaviorData.join("\n");
+  
+    try {
+      await vscode.workspace.fs.writeFile(filePath, Buffer.from(content, 'utf8'));
+      vscode.window.showInformationMessage("Behavior track data saved to file: behavior-track.txt");
+    } catch (error) {
+      vscode.window.showErrorMessage(`Failed to save behavior track data: ${error}`);
+    }
 }
 
 function getWebviewContent() {
@@ -99,6 +131,8 @@ function getWebviewContent() {
         </div>
         <div id="behavior-info2">
         </div>
+
+        <button id="storeButton">Store</button>
         <script>
             let questions = [];
             function addQuestion() {
@@ -112,8 +146,14 @@ function getWebviewContent() {
                 })
 
             }
+            function storeChanges() {
+                vscode.postMessage({
+                    command: 'saveData' 
+                });
+            }
             const vscode = acquireVsCodeApi();
             document.getElementById('submitButton').addEventListener("click", addQuestion);
+            document.getElementById('storeButton').addEventListener("click", storeChanges);
             window.addEventListener('message', (event) => {
                 const message = event.data; // The message data is contained in the event data property
                 switch (message.command) {
