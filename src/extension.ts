@@ -23,6 +23,7 @@ export function activate(context: vscode.ExtensionContext) {
                     case 'showInput':
 						
                         vscode.window.showInformationMessage(`You entered: ${message.text}`);
+                        behaviorData.push("Question: "+message.text+"?");
                         break;
                     case 'behaviorInfo1':
                         vscode.window.showInformationMessage(`Line edit: ${message.info}`);
@@ -57,7 +58,8 @@ export function activate(context: vscode.ExtensionContext) {
                 //when change the line, print what changes to the new line, 
                 //also store the current string;
                 if (currentline !== line) {
-                    behaviorData.push(toprint);
+                    behaviorData.push("Line " + currentline + " changed: "+toprint);
+
                     toprint = "";
                     currentline = line;
                 }
@@ -73,6 +75,7 @@ export function activate(context: vscode.ExtensionContext) {
         vscode.languages.registerCodeActionsProvider("*", {
             provideCodeActions(document, range, context, token) {
                 const behavior = `Code action performed: ${context.diagnostics[0].message}`;
+                
                 panel.webview.postMessage({
                   command: 'behaviorInfo2',
                   info: behavior
@@ -89,6 +92,7 @@ export function activate(context: vscode.ExtensionContext) {
     
 
 }
+
 async function saveData() {
     if (!vscode.workspace.workspaceFolders) {
       vscode.window.showErrorMessage("No workspace folder is opened in VS Code.");
