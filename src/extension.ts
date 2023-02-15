@@ -58,10 +58,11 @@ export function activate(context: vscode.ExtensionContext) {
                 //when change the line, print what changes to the new line, 
                 //also store the current string;
                 if (currentline !== line) {
+                    currentline = line;
                     behaviorData.push("Line " + currentline + " changed: "+toprint);
 
                     toprint = "";
-                    currentline = line;
+
                 }
                 toprint += event.contentChanges[0].text;
                 const behavior = `Line ${line} changed: "${toprint}"`;
