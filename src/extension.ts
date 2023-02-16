@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import * as fs from 'fs';
+// import * as fs from 'fs';
 import { TextEncoder } from 'util';
 
 type Action = {
@@ -115,7 +115,7 @@ async function saveData() {
     try {
         const content = new TextEncoder().encode(jsondata);
         vscode.workspace.fs.writeFile(filePath, content);
-        vscode.window.showInformationMessage("Behavior track data saved to file: behavior-track.txt");
+        vscode.window.showInformationMessage("Behavior track data saved to file: behavior-track.json");
     } catch (error) {
         vscode.window.showErrorMessage(`Failed to save behavior track data: ${error}`);
     }
@@ -129,19 +129,103 @@ function getWebviewContent() {
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Input Display Webview</title>
+        <style>
+            body {
+                background-color: #F6F6F6;
+            }
+            #MainPage{
+                display: flex;
+                flex-direction: column;
+                gap: 20px
+
+            }
+            #msg{
+                background-color: aquamarine;
+                width: 60%;
+            }
+            .container{
+                display: flex;
+                justify-content: flex-start;
+                
+
+            }
+
+
+            input[type="text"] {
+                color: #333;
+                font-size: 16px;
+                font-weight: bold;
+                padding: 8px;
+                border: none;
+                border-radius: 4px;
+                box-shadow: none;
+                background-color: #FFF;
+                margin-right: 8px;
+            }
+            #submitButton {
+                background-color: #00A1F1;
+                color: #FFF;
+                border: none;
+                border-radius: 4px;
+                padding: 8px;
+                cursor: pointer;
+            }
+            #storeButton {
+                background-color: #4CAF50;
+                color: #FFF;
+                border: none;
+                border-radius: 4px;
+                padding: 8px;
+                cursor: pointer;
+            }
+            #behaviorBox {
+                display: flex;
+                flex-direction:column;
+                justify-content:flex-end;
+                align-items: flex-end;
+                width: 80%;
+                height: 100px;
+                background-color: #00A1F1;
+                border-radius: 4px;
+                margin-left: auto;
+
+            }
+            #behavior-info1 {
+                align-self: flex-start;
+                background-color: #00A1F1;
+
+              }
+              
+            #behavior-info2 {
+                align-self: flex-start;
+                background-color: #00A1F1;
+
+            }
+        </style>
     </head>
     <body>
-        <input type="text" id="inputBox">
-        <button id="submitButton">Submit</button>
-        <div id="msg">
-            <pre></pre>
-        </div>
-        <div id="behavior-info1">
-        </div>
-        <div id="behavior-info2">
-        </div>
+        <div id="MainPage">
 
-        <button id="storeButton">Store</button>
+       
+            <div id="msg">
+                <pre>Questions:</pre>
+            </div>
+            <div id = "behaviorBox">
+                <div id="behavior-info1">
+                </div>
+                <div id="behavior-info2">
+                </div>
+            </div>
+            <div class="container">
+                <input type="text" id="inputBox">
+                <button id="submitButton">Submit</button>
+            </div>
+
+            <button id="storeButton">Store</button>
+
+
+
+        </div>
         <script>
             let questions = [];
             function addQuestion() {
@@ -178,6 +262,7 @@ function getWebviewContent() {
 
 
         </script>
+
     </body>
-    </html>`;
+</html>`;
 }
