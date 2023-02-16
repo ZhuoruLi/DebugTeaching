@@ -1,5 +1,14 @@
 import * as vscode from 'vscode';
-let behaviorData: string[] = [];
+import * as fs from 'fs';
+import { TextEncoder } from 'util';
+
+type Action = {
+    idGroup: string;
+    timeStamp: number;
+    changes: string;
+};
+let currentGroup = "";
+let behaviorData: Action[] = [];
 //let panel: vscode.WebviewPanel | undefined;
 export function activate(context: vscode.ExtensionContext) {
     console.log('Congratulations, your extension "input-display-webview" is now active!');
@@ -23,7 +32,9 @@ export function activate(context: vscode.ExtensionContext) {
                     case 'showInput':
 						
                         vscode.window.showInformationMessage(`You entered: ${message.text}`);
-                        behaviorData.push("Question: "+message.text+"?");
+                        currentGroup = message.text;
+
+                        // behaviorData.push({idGroup:group, timeStamp: Date.now(), changes:});
                         break;
                     case 'behaviorInfo1':
                         vscode.window.showInformationMessage(`Line edit: ${message.info}`);
@@ -40,14 +51,6 @@ export function activate(context: vscode.ExtensionContext) {
             context.subscriptions
         );
         
-        // vscode.workspace.onDidChangeTextDocument(event => {
-        //     if (panel) {
-        //         const behavior = `Text changed: ${event.document.getText()}`;
-        //         panel.webview.postMessage({
-        //           command: 'behaviorInfo',
-        //           info: behavior
-        //         });
-        //     }
             
         // });
         let toprint:string  = "";
@@ -59,8 +62,10 @@ export function activate(context: vscode.ExtensionContext) {
                 //also store the current string;
                 if (currentline !== line) {
                     currentline = line;
-                    behaviorData.push("Line " + currentline + " changed: "+toprint);
-
+                    let time = Date.now();
+                    let change:string = "Line " + currentline + " changed: "+toprint;
+                    behaviorData.push({idGroup: currentGroup, timeStamp:time , changes: change});
+                    
                     toprint = "";
 
                 }
@@ -100,15 +105,21 @@ async function saveData() {
       return;
     }
   
-    const filePath = vscode.Uri.joinPath(vscode.workspace.workspaceFolders[0].uri, 'behavior-track.txt');
-    const content = behaviorData.join("\n");
-  
+    const filePath = vscode.Uri.joinPath(vscode.workspace.workspaceFolders[0].uri, 'behavior-track.json');
+    const jsondata = JSON.stringify(behaviorData,null, 2);
+    //join("\n"
+    // if (filePath) {
+    //     const content = new TextEncoder().encode(jsondata);
+    //     vscode.workspace.fs.writeFile(filePath, content);
+    // }
     try {
-      await vscode.workspace.fs.writeFile(filePath, Buffer.from(content, 'utf8'));
-      vscode.window.showInformationMessage("Behavior track data saved to file: behavior-track.txt");
+        const content = new TextEncoder().encode(jsondata);
+        vscode.workspace.fs.writeFile(filePath, content);
+        vscode.window.showInformationMessage("Behavior track data saved to file: behavior-track.txt");
     } catch (error) {
-      vscode.window.showErrorMessage(`Failed to save behavior track data: ${error}`);
+        vscode.window.showErrorMessage(`Failed to save behavior track data: ${error}`);
     }
+
 }
 
 function getWebviewContent() {
