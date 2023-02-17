@@ -14,8 +14,8 @@
                 gap: 20px
 
             }
-            #msg{
-                background-color: aquamarine;
+            .question{
+                background-color: #4CAF50;
                 width: 60%;
             }
             .container{
@@ -79,10 +79,10 @@
         </style>
     </head>
     <body>
-        <div id="MainPage">
+        <div id=  "MainPage"  >
 
        
-            <div id="msg">
+            <div id="msg" class = "question">
                 <pre>Questions:</pre>
             </div>
             <div id = "behaviorBox">
@@ -104,6 +104,13 @@
         <script>
             let questions = [];
             function addQuestion() {
+                const div = document.createElement("div");
+                div.style.width = "100px";
+                div.style.height = "100px";
+                div.style.background = "red";
+                div.style.color = "white";
+                div.innerHTML = "Hello";
+                document.getElementById("MainPage").appendChild(div);
                 const question = document.getElementById('inputBox').value;
                 questions.push(question);
                 let pre = document.querySelector('#msg pre');

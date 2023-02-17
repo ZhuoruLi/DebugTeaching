@@ -140,8 +140,10 @@ function getWebviewContent() {
 
             }
             #msg{
-                background-color: aquamarine;
+                background-color: #4CAF50;
+                color: #FFF;
                 width: 60%;
+                border-radius: 4px;
             }
             .container{
                 display: flex;
@@ -177,6 +179,7 @@ function getWebviewContent() {
                 border-radius: 4px;
                 padding: 8px;
                 cursor: pointer;
+                margin-top: 20px;
             }
             #behaviorBox {
                 display: flex;
@@ -221,22 +224,39 @@ function getWebviewContent() {
                 <button id="submitButton">Submit</button>
             </div>
 
-            <button id="storeButton">Store</button>
+            
 
 
 
         </div>
+        <button id="storeButton">Store</button>
         <script>
             let questions = [];
             function addQuestion() {
                 const question = document.getElementById('inputBox').value;
                 questions.push(question);
-                let pre = document.querySelector('#msg pre');
-                pre.textContent = JSON.stringify(questions, '\t', 2);
-                vscode.postMessage({
-                    command: 'showInput',
-                    text:  question
-                })
+                if (questions.length == 1) {
+                    
+
+                    let pre = document.querySelector('#msg pre');
+                    pre.textContent = "Questions: " + questions[questions.length - 1];
+                    vscode.postMessage({
+                        command: 'showInput',
+                        text:  question
+                    })
+                    return;
+                }
+                const container = document.createElement('div');
+                container.setAttribute('class', 'question');
+                container.style.backgroundColor = '#4CAF50';
+                container.style.color = '#FFF';
+                container.style.width = '60%';
+                container.style.borderRadius = '4px';
+                const preElement = document.createElement('pre');
+                const textNode = document.createTextNode('Questions:' + questions[questions.length - 1]);
+                preElement.appendChild(textNode);
+                container.appendChild(preElement);
+                document.getElementById("MainPage").appendChild(container);
 
             }
             function storeChanges() {
