@@ -308,6 +308,7 @@ function getWebviewContent() {
             // })
             // return;
             if (questions.length == 1) {
+                console.log(questions,length);
                 let pre = document.querySelector('#msg pre');
                 pre.textContent = "Questions: " + questions[questions.length - 1];
                 pre.contentEditable = true;
@@ -326,7 +327,7 @@ function getWebviewContent() {
                 })
                 return;
             }
-            
+            console.log(questions,length);
             const container = document.createElement('div');
             container.setAttribute('class', 'question');
             container.style.backgroundColor = '#45FDC6';
@@ -340,7 +341,7 @@ function getWebviewContent() {
             preElement.contentEditable = true;
             preElement.addEventListener('blur', function() {
                 const index = Array.from(document.querySelectorAll('.question')).indexOf(container);
-                const originQuestion = questions[index];
+                const originQuestion = questions[index+1];
                 const updateQuestion = preElement.textContent.replace("Questions: ", "");
                 questions[index] = updateQuestion;
                 vscode.postMessage({
