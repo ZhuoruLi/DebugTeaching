@@ -107,6 +107,7 @@
        
             <div id="msg">
                 <pre>Questions:</pre>
+                <ul id="questionList"></ul>
             </div>
             <div id = "behaviorBox">
                 Actions:
@@ -135,43 +136,95 @@
             function addQuestion() {
                 const question = document.getElementById('inputBox').value;
                 questions.push(question);
-                if (questions.length == 1) {
+                // if (questions.length == 1) {
                     
 
+                //     let pre = document.querySelector('#msg pre');
+                //     pre.textContent = "Questions: " + questions[questions.length - 1];
+
+                //     // pre.contentEditable = true;
+
+
+                //     vscode.postMessage({
+                //         command: 'showInput',
+                //         text:  question
+                //     })
+                //     return;
+                // }
+                // const container = document.createElement('div');
+                // container.setAttribute('class', 'question');
+                // container.style.backgroundColor = '#45FDC6';
+                // container.style.color = '#FFF';
+                // container.style.width = '60%';
+                // container.style.borderRadius = '4px';
+                // const preElement = document.createElement('pre');
+                // const textNode = document.createTextNode('Questions:' + questions[questions.length - 1]);
+                // preElement.appendChild(textNode);
+                // container.appendChild(preElement);
+                // document.getElementById("MainPage").appendChild(container);
+                // vscode.postMessage({
+                //     command: 'showInput',
+                //     text:  question
+                // })
+                // return;
+                if (questions.length == 1) {
                     let pre = document.querySelector('#msg pre');
                     pre.textContent = "Questions: " + questions[questions.length - 1];
+                    pre.contentEditable = true;
+                    pre.addEventListener('blur', function() {
+                    const originQuestion = questions[0];
+                    questions[questions.length - 1] = pre.textContent.replace("Questions: ", "");
+                    vscode.postMessage({
+                        command: 'editQuestion',
+                        updated:  originQuestion,
+                        origin:  questions[0]
+                    })
+                });
                     vscode.postMessage({
                         command: 'showInput',
                         text:  question
                     })
                     return;
                 }
+                
                 const container = document.createElement('div');
                 container.setAttribute('class', 'question');
                 container.style.backgroundColor = '#45FDC6';
                 container.style.color = '#FFF';
                 container.style.width = '60%';
                 container.style.borderRadius = '4px';
+            
                 const preElement = document.createElement('pre');
-                const textNode = document.createTextNode('Questions:' + questions[questions.length - 1]);
+                const textNode = document.createTextNode('Questions: ' + questions[questions.length - 1]);
                 preElement.appendChild(textNode);
+                preElement.contentEditable = true;
+                preElement.addEventListener('blur', function() {
+                const index = Array.from(document.querySelectorAll('.question')).indexOf(container);
+                questions[index] = preElement.textContent.replace("Questions: ", "");
+                });
+            
                 container.appendChild(preElement);
                 document.getElementById("MainPage").appendChild(container);
+                vscode.postMessage({
+                    command: 'showInput',
+                    text:  question
+                })
+                
+
 
             }
+
             function storeChanges() {
                 vscode.postMessage({
                     command: 'saveData' 
                 });
             }
-            function addAction () {
+            function addAction() {
                 const action = document.getElementById('inputAction').value;
                 const container = document.createElement('div');
                 container.setAttribute('class', 'customAction');
-                container.style.backgroundColor = '#45FDC6';
+                container.style.backgroundColor = '#45E7FD';
                 container.style.color = '#FFF';
-                container.style.width = '60%';
-                container.style.borderRadius = '4px';
                 const preElement = document.createElement('pre');
                 const textNode = document.createTextNode(action);
                 preElement.appendChild(textNode);

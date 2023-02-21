@@ -1,0 +1,125 @@
+<body>
+    <div id="MainPage">
+        <div id="msg">
+            <pre>Questions:</pre>
+        </div>
+        <div id="behaviorBox">
+            Actions:
+            <div id="behavior-info1"></div>
+            <div id="behavior-info2"></div>
+        </div>
+        <div id="Add-action">
+            <input type="text" id="inputAction">
+            <button id="submitAction">Add Action</button>
+        </div>
+        <div class="container">
+            <input type="text" id="inputBox">
+            <button id="submitButton">Submit</button>
+        </div>
+    </div>
+    <button id="storeButton">Store</button>
+
+    <script>
+        let questions = [];
+        const vscode = acquireVsCodeApi();
+
+        function addQuestion() {
+            const question = document.getElementById('inputBox').value;
+            questions.push(question);
+
+            if (questions.length == 1) {
+                let pre = document.querySelector('#msg pre');
+                pre.innerHTML = `Questions: <span class="question" data-index="0">${questions[0]}</span>`;
+                vscode.postMessage({
+                    command: 'showInput',
+                    text: question
+                });
+                return;
+            }
+
+            const container = document.createElement('div');
+            container.setAttribute('class', 'question');
+            container.style.backgroundColor = '#45FDC6';
+            container.style.color = '#FFF';
+            container.style.width = '60%';
+            container.style.borderRadius = '4px';
+
+            const preElement = document.createElement('pre');
+            const textNode = document.createTextNode(`Questions: `);
+            preElement.appendChild(textNode);
+
+            const questionElement = document.createElement('span');
+            questionElement.setAttribute('class', 'question');
+            questionElement.setAttribute('data-index', questions.length - 1);
+            questionElement.textContent = questions[questions.length - 1];
+            questionElement.addEventListener('click', editQuestion);
+
+            preElement.appendChild(questionElement);
+            container.appendChild(preElement);
+
+            document.getElementById('MainPage').appendChild(container);
+        }
+
+        function storeChanges() {
+            vscode.postMessage({
+                command: 'saveData'
+            });
+        }
+
+        function addAction() {
+            const action = document.getElementById('inputAction').value;
+
+            const container = document.createElement('div');
+            container.setAttribute('class', 'customAction');
+            container.style.backgroundColor = '#45E7FD';
+            container.style.color = '#FFF';
+
+            const preElement = document.createElement('pre');
+            const textNode = document.createTextNode(action);
+            preElement.appendChild(textNode);
+
+            container.appendChild(preElement);
+            document.getElementById('behaviorBox').appendChild(container);
+
+            vscode.postMessage({
+                command: 'AddAction',
+                text: action
+            });
+        }
+
+        function editQuestion(event) {
+            const questionElement = event.target;
+            const questionIndex = parseInt(questionElement.getAttribute('data-index'));
+            const currentQuestion = questions[questionIndex];
+
+            const newQuestion = prompt('Edit question:', currentQuestion);
+            if (newQuestion != null) {
+                questionElement.textContent = newQuestion;
+                questions[questionIndex] = newQuestion;
+
+                vscode.postMessage({
+                    command: 'updateQuestion',
+                    index: questionIndex,
+                    text: newQuestion
+                });
+            }
+        }
+
+        document.getElementById('submitButton').addEventListener("click", addQuestion);
+        document.getElementById('storeButton').addEventListener("click", storeChanges);
+        document.getElementById('submitAction').addEventListener("click", addAction);
+        window.addEventListener('message', (event) => {
+            const message = event.data; // The message data is contained in the event data property
+            switch (message.command) {
+                case 'behaviorInfo1':
+                    // Update the UI with the information about the user behavior
+                    document.getElementById('behavior-info1').innerText = message.info;
+                    break;
+                case 'behaviorInfo2':
+                    document.getElementById('behavior-info2').innerText = message.info;
+                    break;
+            }
+        });
+    </script>
+
+</body>
