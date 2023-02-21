@@ -44,6 +44,12 @@ export function activate(context: vscode.ExtensionContext) {
                     case 'saveData':
                         saveData();
                         break;
+                    case 'AddAction':
+                        let times = Date.now();
+                        let change:string = message.text;
+                        behaviorData.push({idGroup: currentGroup, timeStamp:times , changes: change});
+                        break;
+                        
                 
                 }
             },
@@ -81,7 +87,8 @@ export function activate(context: vscode.ExtensionContext) {
         vscode.languages.registerCodeActionsProvider("*", {
             provideCodeActions(document, range, context, token) {
                 const behavior = `Code action performed: ${context.diagnostics[0].message}`;
-                
+                const objIndex = behaviorData.findIndex((obj => obj.changes.includes("Line " + currentline)));
+                behaviorData[objIndex].changes += behavior;
                 panel.webview.postMessage({
                   command: 'behaviorInfo2',
                   info: behavior
@@ -140,7 +147,7 @@ function getWebviewContent() {
 
             }
             #msg{
-                background-color: #4CAF50;
+                background-color: #45FDC6;
                 color: #FFF;
                 width: 60%;
                 border-radius: 4px;
@@ -165,7 +172,7 @@ function getWebviewContent() {
                 margin-right: 8px;
             }
             #submitButton {
-                background-color: #00A1F1;
+                background-color: #45FDC6;
                 color: #FFF;
                 border: none;
                 border-radius: 4px;
@@ -173,7 +180,7 @@ function getWebviewContent() {
                 cursor: pointer;
             }
             #storeButton {
-                background-color: #4CAF50;
+                background-color: #45FDC6;
                 color: #FFF;
                 border: none;
                 border-radius: 4px;
@@ -182,26 +189,46 @@ function getWebviewContent() {
                 margin-top: 20px;
             }
             #behaviorBox {
+                color: #FFF;
                 display: flex;
                 flex-direction:column;
-                justify-content:flex-end;
-                align-items: flex-end;
-                width: 80%;
-                height: 100px;
-                background-color: #00A1F1;
+                justify-content:flex-start;
+                align-items: flex-start;
+                width: 70%;
+                height: auto;
+                background-color: #45E7FD;
                 border-radius: 4px;
                 margin-left: auto;
 
             }
+            #Add-action {
+                color: #FFF;
+                display: flex;
+                flex-direction:row;
+                justify-content:flex-end;
+                align-items: flex-start;
+                width: 70%;
+                
+                border-radius: 4px;
+                margin-left: auto;
+            }
+            #submitAction {
+                background-color: #45FDC6;
+                color: #FFF;
+                border: none;
+                border-radius: 4px;
+                padding: 8px;
+                cursor: pointer;
+            }
             #behavior-info1 {
                 align-self: flex-start;
-                background-color: #00A1F1;
+                background-color: #45E7FD;
 
               }
               
             #behavior-info2 {
                 align-self: flex-start;
-                background-color: #00A1F1;
+                background-color: #45E7FD;
 
             }
         </style>
@@ -214,10 +241,15 @@ function getWebviewContent() {
                 <pre>Questions:</pre>
             </div>
             <div id = "behaviorBox">
+                Actions:
                 <div id="behavior-info1">
                 </div>
                 <div id="behavior-info2">
                 </div>
+            </div>
+            <div id = "Add-action">
+                <input type="text" id="inputAction">
+                <button id="submitAction">Add Action</button>
             </div>
             <div class="container">
                 <input type="text" id="inputBox">
@@ -248,7 +280,7 @@ function getWebviewContent() {
                 }
                 const container = document.createElement('div');
                 container.setAttribute('class', 'question');
-                container.style.backgroundColor = '#4CAF50';
+                container.style.backgroundColor = '#45FDC6';
                 container.style.color = '#FFF';
                 container.style.width = '60%';
                 container.style.borderRadius = '4px';
@@ -264,9 +296,27 @@ function getWebviewContent() {
                     command: 'saveData' 
                 });
             }
+            function addAction() {
+                const action = document.getElementById('inputAction').value;
+                const container = document.createElement('div');
+                container.setAttribute('class', 'customAction');
+                container.style.backgroundColor = '#45E7FD';
+                container.style.color = '#FFF';
+                const preElement = document.createElement('pre');
+                const textNode = document.createTextNode(action);
+                preElement.appendChild(textNode);
+                container.appendChild(preElement);
+                document.getElementById("behaviorBox").appendChild(container);
+                vscode.postMessage({
+                    command: 'AddAction',
+                    text:  action
+                })
+
+            }
             const vscode = acquireVsCodeApi();
             document.getElementById('submitButton').addEventListener("click", addQuestion);
             document.getElementById('storeButton').addEventListener("click", storeChanges);
+            document.getElementById('submitAction').addEventListener("click", addAction);
             window.addEventListener('message', (event) => {
                 const message = event.data; // The message data is contained in the event data property
                 switch (message.command) {
