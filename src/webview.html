@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="/stylesheet/webstyle.css">
+        
 
 
         <title>Input Display Webview</title>
@@ -139,37 +139,7 @@
         function addQuestion() {
             const question = document.getElementById('inputBox').value;
             questions.push(question);
-            // if (questions.length == 1) {
-                
 
-            //     let pre = document.querySelector('#msg pre');
-            //     pre.textContent = "Questions: " + questions[questions.length - 1];
-
-            //     // pre.contentEditable = true;
-
-
-            //     vscode.postMessage({
-            //         command: 'showInput',
-            //         text:  question
-            //     })
-            //     return;
-            // }
-            // const container = document.createElement('div');
-            // container.setAttribute('class', 'question');
-            // container.style.backgroundColor = '#45FDC6';
-            // container.style.color = '#FFF';
-            // container.style.width = '60%';
-            // container.style.borderRadius = '4px';
-            // const preElement = document.createElement('pre');
-            // const textNode = document.createTextNode('Questions:' + questions[questions.length - 1]);
-            // preElement.appendChild(textNode);
-            // container.appendChild(preElement);
-            // document.getElementById("MainPage").appendChild(container);
-            // vscode.postMessage({
-            //     command: 'showInput',
-            //     text:  question
-            // })
-            // return;
             if (questions.length == 1) {
                 console.log(questions,length);
                 let pre = document.querySelector('#msg pre');
