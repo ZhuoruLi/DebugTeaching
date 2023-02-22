@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
-// import * as fs from 'fs';
+import * as fs from 'fs';
+import * as path from 'path';
 import { TextEncoder } from 'util';
 
 type Action = {
@@ -19,11 +20,19 @@ export function activate(context: vscode.ExtensionContext) {
             'Input Display Webview',
             vscode.ViewColumn.One,
             {
-                enableScripts: true
+                enableScripts: true,
+                localResourceRoots: [vscode.Uri.file(path.join(context.extensionPath, './stylesheet/webstyle.css'))]
+
+
             }
         );
+        const styleSrc = vscode.Uri.file(path.join(context.extensionPath, './stylesheet/webstyle.css')).with({ scheme: 'vscode-resource' });
+        const filePath: vscode.Uri = vscode.Uri.file(path.join(context.extensionPath, 'src', 'webview.html'));
+        panel.webview.html = fs.readFileSync(filePath.fsPath, 'utf8');
+        //panel.webview.html = getWebviewContent();
 
-        panel.webview.html = getWebviewContent();
+
+
 
         panel.webview.onDidReceiveMessage(
             message => {
@@ -137,274 +146,3 @@ async function saveData() {
 
 }
 
-function getWebviewContent() {
-    return `<!DOCTYPE html>
-    <html>
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Input Display Webview</title>
-        <style>
-            body {
-                background-color: #F6F6F6;
-            }
-            #MainPage{
-                display: flex;
-                flex-direction: column;
-                gap: 20px
-
-            }
-            #msg{
-                background-color: #45FDC6;
-                color: #FFF;
-                width: 60%;
-                border-radius: 4px;
-            }
-            .container{
-                display: flex;
-                justify-content: flex-start;
-                
-
-            }
-
-
-            input[type="text"] {
-                color: #333;
-                font-size: 16px;
-                font-weight: bold;
-                padding: 8px;
-                border: none;
-                border-radius: 4px;
-                box-shadow: none;
-                background-color: #FFF;
-                margin-right: 8px;
-            }
-            #submitButton {
-                background-color: #45FDC6;
-                color: #FFF;
-                border: none;
-                border-radius: 4px;
-                padding: 8px;
-                cursor: pointer;
-            }
-            #storeButton {
-                background-color: #45FDC6;
-                color: #FFF;
-                border: none;
-                border-radius: 4px;
-                padding: 8px;
-                cursor: pointer;
-                margin-top: 20px;
-            }
-            #behaviorBox {
-                color: #FFF;
-                display: flex;
-                flex-direction:column;
-                justify-content:flex-start;
-                align-items: flex-start;
-                width: 70%;
-                height: auto;
-                background-color: #45E7FD;
-                border-radius: 4px;
-                margin-left: auto;
-
-            }
-            #Add-action {
-                color: #FFF;
-                display: flex;
-                flex-direction:row;
-                justify-content:flex-end;
-                align-items: flex-start;
-                width: 70%;
-                
-                border-radius: 4px;
-                margin-left: auto;
-            }
-            #submitAction {
-                background-color: #45FDC6;
-                color: #FFF;
-                border: none;
-                border-radius: 4px;
-                padding: 8px;
-                cursor: pointer;
-            }
-            #behavior-info1 {
-                align-self: flex-start;
-                background-color: #45E7FD;
-
-              }
-              
-            #behavior-info2 {
-                align-self: flex-start;
-                background-color: #45E7FD;
-
-            }
-        </style>
-    </head>
-    <body>
-    <div id="MainPage">
-
-   
-        <div id="msg">
-            <pre>Questions:</pre>
-            <ul id="questionList"></ul>
-        </div>
-        <div id = "behaviorBox">
-            Actions:
-            <div id="behavior-info1">
-            </div>
-            <div id="behavior-info2">
-            </div>
-        </div>
-        <div id = "Add-action">
-            <input type="text" id="inputAction">
-            <button id="submitAction">Add Action</button>
-        </div>
-        <div class="container">
-            <input type="text" id="inputBox">
-            <button id="submitButton">Submit</button>
-        </div>
-
-        
-
-
-
-    </div>
-    <button id="storeButton">Store</button>
-    <script>
-        let questions = [];
-        function addQuestion() {
-            const question = document.getElementById('inputBox').value;
-            questions.push(question);
-            // if (questions.length == 1) {
-                
-
-            //     let pre = document.querySelector('#msg pre');
-            //     pre.textContent = "Questions: " + questions[questions.length - 1];
-
-            //     // pre.contentEditable = true;
-
-
-            //     vscode.postMessage({
-            //         command: 'showInput',
-            //         text:  question
-            //     })
-            //     return;
-            // }
-            // const container = document.createElement('div');
-            // container.setAttribute('class', 'question');
-            // container.style.backgroundColor = '#45FDC6';
-            // container.style.color = '#FFF';
-            // container.style.width = '60%';
-            // container.style.borderRadius = '4px';
-            // const preElement = document.createElement('pre');
-            // const textNode = document.createTextNode('Questions:' + questions[questions.length - 1]);
-            // preElement.appendChild(textNode);
-            // container.appendChild(preElement);
-            // document.getElementById("MainPage").appendChild(container);
-            // vscode.postMessage({
-            //     command: 'showInput',
-            //     text:  question
-            // })
-            // return;
-            if (questions.length == 1) {
-                console.log(questions,length);
-                let pre = document.querySelector('#msg pre');
-                pre.textContent = "Questions: " + questions[questions.length - 1];
-                pre.contentEditable = true;
-                pre.addEventListener('blur', function() {
-                    const originQuestion = questions[0];
-                    questions[questions.length - 1] = pre.textContent.replace("Questions: ", "");
-                    vscode.postMessage({
-                        command: 'editQuestion',
-                        updated:  questions[0],
-                        origin:  originQuestion
-                    })
-                });
-                vscode.postMessage({
-                    command: 'showInput',
-                    text:  question
-                })
-                return;
-            }
-            console.log(questions,length);
-            const container = document.createElement('div');
-            container.setAttribute('class', 'question');
-            container.style.backgroundColor = '#45FDC6';
-            container.style.color = '#FFF';
-            container.style.width = '60%';
-            container.style.borderRadius = '4px';
-        
-            const preElement = document.createElement('pre');
-            const textNode = document.createTextNode('Questions: ' + questions[questions.length - 1]);
-            preElement.appendChild(textNode);
-            preElement.contentEditable = true;
-            preElement.addEventListener('blur', function() {
-                const index = Array.from(document.querySelectorAll('.question')).indexOf(container);
-                const originQuestion = questions[index+1];
-                const updateQuestion = preElement.textContent.replace("Questions: ", "");
-                questions[index] = updateQuestion;
-                vscode.postMessage({
-                    command: 'editQuestion',
-                    updated:  questions[index],
-                    origin:  originQuestion
-                })
-            });
-        
-            container.appendChild(preElement);
-            document.getElementById("MainPage").appendChild(container);
-            vscode.postMessage({
-                command: 'showInput',
-                text:  question
-            })
-            
-
-
-        }
-
-        function storeChanges() {
-            vscode.postMessage({
-                command: 'saveData' 
-            });
-        }
-        function addAction() {
-            const action = document.getElementById('inputAction').value;
-            const container = document.createElement('div');
-            container.setAttribute('class', 'customAction');
-            container.style.backgroundColor = '#45E7FD';
-            container.style.color = '#FFF';
-            const preElement = document.createElement('pre');
-            const textNode = document.createTextNode(action);
-            preElement.appendChild(textNode);
-            container.appendChild(preElement);
-            document.getElementById("behaviorBox").appendChild(container);
-            vscode.postMessage({
-                command: 'AddAction',
-                text:  action
-            })
-
-        }
-        const vscode = acquireVsCodeApi();
-        document.getElementById('submitButton').addEventListener("click", addQuestion);
-        document.getElementById('storeButton').addEventListener("click", storeChanges);
-        document.getElementById('submitAction').addEventListener("click", addAction);
-        window.addEventListener('message', (event) => {
-            const message = event.data; // The message data is contained in the event data property
-            switch (message.command) {
-                case 'behaviorInfo1':
-                    // Update the UI with the information about the user behavior
-                    document.getElementById('behavior-info1').innerText = message.info;
-                    break;
-                case 'behaviorInfo2':
-                    document.getElementById('behavior-info2').innerText = message.info;
-                    break;
-            }
-        });
-
-
-    </script>
-
-</body>
-
-</html>`;
-}

@@ -1,0 +1,95 @@
+
+body {
+    background-color: #F6F6F6;
+}
+#MainPage{
+    display: flex;
+    flex-direction: column;
+    gap: 20px
+
+}
+#msg{
+    background-color: #45FDC6;
+    color: #FFF;
+    width: 60%;
+    border-radius: 4px;
+}
+.container{
+    display: flex;
+    justify-content: flex-start;
+    
+
+}
+
+
+input[type="text"] {
+    color: #333;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 8px;
+    border: none;
+    border-radius: 4px;
+    box-shadow: none;
+    background-color: #FFF;
+    margin-right: 8px;
+}
+#submitButton {
+    background-color: #45FDC6;
+    color: #FFF;
+    border: none;
+    border-radius: 4px;
+    padding: 8px;
+    cursor: pointer;
+}
+#storeButton {
+    background-color: #45FDC6;
+    color: #FFF;
+    border: none;
+    border-radius: 4px;
+    padding: 8px;
+    cursor: pointer;
+    margin-top: 20px;
+}
+#behaviorBox {
+    color: #FFF;
+    display: flex;
+    flex-direction:column;
+    justify-content:flex-start;
+    align-items: flex-start;
+    width: 70%;
+    height: auto;
+    background-color: #45E7FD;
+    border-radius: 4px;
+    margin-left: auto;
+
+}
+#Add-action {
+    color: #FFF;
+    display: flex;
+    flex-direction:row;
+    justify-content:flex-end;
+    align-items: flex-start;
+    width: 70%;
+    
+    border-radius: 4px;
+    margin-left: auto;
+}
+#submitAction {
+    background-color: #45FDC6;
+    color: #FFF;
+    border: none;
+    border-radius: 4px;
+    padding: 8px;
+    cursor: pointer;
+}
+#behavior-info1 {
+    align-self: flex-start;
+    background-color: #45E7FD;
+
+    }
+    
+#behavior-info2 {
+    align-self: flex-start;
+    background-color: #45E7FD;
+
+}
