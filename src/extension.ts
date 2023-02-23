@@ -96,12 +96,16 @@ export function activate(context: vscode.ExtensionContext) {
                     let time = Date.now();
                     let change:string = "Line " + currentline + " changed: "+toprint;
                     behaviorData.push({idGroup: currentId, timeStamp:time , changes: change});
+                    panel.webview.postMessage({
+                        command: 'behavior1ChangedLine',
+                        info: change
+                      });
                     
                     toprint = "";
 
                 }
                 toprint += event.contentChanges[0].text;
-                const behavior = `Line ${line} changed: "${toprint}"`;
+                const behavior = `Line ${line+1} changed: "${toprint}"`;
                 panel.webview.postMessage({
                   command: 'behaviorInfo1',
                   info: behavior

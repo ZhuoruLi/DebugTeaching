@@ -227,10 +227,24 @@
                 case 'behaviorInfo1':
                     // Update the UI with the information about the user behavior
                     document.getElementById('behavior-info1').innerText = message.info;
+                    //const action = document.getElementById('inputAction').value;
+
                     break;
                 case 'behaviorInfo2':
                     document.getElementById('behavior-info2').innerText = message.info;
                     break;
+                case 'behavior1ChangedLine':
+                    const container = document.createElement('div');
+                    container.setAttribute('class', 'customAction');
+                    container.style.backgroundColor = '#45E7FD';
+                    container.style.color = '#FFF';
+                    const preElement = document.createElement('pre');
+                    const textNode = document.createTextNode(message.info);
+                    preElement.appendChild(textNode);
+                    container.appendChild(preElement);
+                    document.getElementById("behaviorBox").appendChild(container);
+                    break;
+
             }
         });
 
