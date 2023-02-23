@@ -4,12 +4,18 @@ import * as path from 'path';
 import { TextEncoder } from 'util';
 
 type Action = {
-    idGroup: string;
+    idGroup: number;
     timeStamp: number;
     changes: string;
 };
+type Question = {
+    idGroup: number;
+    text: string;
+};
+let currentId = 0;
 let currentGroup = "";
 let behaviorData: Action[] = [];
+let questionData: Question[] = [];
 //let panel: vscode.WebviewPanel | undefined;
 export function activate(context: vscode.ExtensionContext) {
     console.log('Congratulations, your extension "input-display-webview" is now active!');
@@ -41,7 +47,9 @@ export function activate(context: vscode.ExtensionContext) {
                     case 'showInput':
 						
                         vscode.window.showInformationMessage(`You entered: ${message.text}`);
-                        currentGroup = message.text;
+                        currentId++;
+                        questionData.push({idGroup:currentId, text: message.text});
+                        //currentGroup = message.text;
 
                         // behaviorData.push({idGroup:group, timeStamp: Date.now(), changes:});
                         break;
@@ -56,13 +64,13 @@ export function activate(context: vscode.ExtensionContext) {
                     case 'AddAction':
                         let times = Date.now();
                         let change:string = message.text;
-                        behaviorData.push({idGroup: currentGroup, timeStamp:times , changes: change});
+                        behaviorData.push({idGroup: currentId, timeStamp:times , changes: change});
                         break;
                     case 'editQuestion':
                         vscode.window.showInformationMessage(`Question edit: ${message.origin}`);
-                        for (let i = 0; i < behaviorData.length; i++) {
-                            if (behaviorData[i].idGroup === message.origin) {
-                                behaviorData[i].idGroup = message.updated;
+                        for (let i = 0; i < questionData.length; i++) {
+                            if (questionData[i].text === message.origin) {
+                                questionData[i].text = message.updated;
                             }
                         }
                         break;
@@ -87,7 +95,7 @@ export function activate(context: vscode.ExtensionContext) {
                     currentline = line;
                     let time = Date.now();
                     let change:string = "Line " + currentline + " changed: "+toprint;
-                    behaviorData.push({idGroup: currentGroup, timeStamp:time , changes: change});
+                    behaviorData.push({idGroup: currentId, timeStamp:time , changes: change});
                     
                     toprint = "";
 
@@ -129,20 +137,18 @@ async function saveData() {
       return;
     }
   
-    const filePath = vscode.Uri.joinPath(vscode.workspace.workspaceFolders[0].uri, 'behavior-track.json');
-    const jsondata = JSON.stringify(behaviorData,null, 2);
-    //join("\n"
-    // if (filePath) {
-    //     const content = new TextEncoder().encode(jsondata);
-    //     vscode.workspace.fs.writeFile(filePath, content);
-    // }
+    const filePath = vscode.Uri.joinPath(vscode.workspace.workspaceFolders[0].uri, 'data.json');
+    const data = {  questionData, behaviorData };
+    const jsondata = JSON.stringify(data,null, 2);
+
     try {
         const content = new TextEncoder().encode(jsondata);
         vscode.workspace.fs.writeFile(filePath, content);
-        vscode.window.showInformationMessage("Behavior track data saved to file: behavior-track.json");
+        vscode.window.showInformationMessage("Behavior track data saved to file: data.json");
     } catch (error) {
         vscode.window.showErrorMessage(`Failed to save behavior track data: ${error}`);
     }
 
 }
+
 
