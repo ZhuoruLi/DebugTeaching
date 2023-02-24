@@ -160,6 +160,10 @@
                 })
                 return;
             }
+            vscode.postMessage({
+                command: 'showInput',
+                text:  question
+            })
             
             const container = document.createElement('div');
             container.setAttribute('class', 'question');
@@ -187,10 +191,7 @@
             container.appendChild(preElement);
             document.getElementById("MainPage").appendChild(container);
             
-            vscode.postMessage({
-                command: 'showInput',
-                text:  question
-            })
+
             // create the main container div and set its id attribute
             const behaviorBox = document.createElement("div");
             behaviorBox.setAttribute("class", "behaviorBox");
@@ -248,6 +249,22 @@
             submitAction.style.borderRadius = "4px";
             submitAction.style.padding = "8px";
             submitAction.style.cursor = "pointer";
+            submitAction.addEventListener("click", ()=>{
+                const action = inputAction.value;
+                const container = document.createElement('div');
+                container.setAttribute('class', 'customAction');
+                container.style.backgroundColor = '#45E7FD';
+                container.style.color = '#FFF';
+                const preElement = document.createElement('pre');
+                const textNode = document.createTextNode(action);
+                preElement.appendChild(textNode);
+                container.appendChild(preElement);
+                behaviorBox.appendChild(container);
+                vscode.postMessage({
+                    command: 'AddAction',
+                    text:  action
+                })
+            })
 
             // append the input field and button to the Add-action div
             addAction.appendChild(inputAction);
