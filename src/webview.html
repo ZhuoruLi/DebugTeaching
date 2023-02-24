@@ -306,7 +306,7 @@
         document.getElementById('submitAction').addEventListener("click", addAction);
         window.addEventListener('message', (event) => {
             const message = event.data; // The message data is contained in the event data property
-            if (questions.length == 1) {
+            if (questions.length <= 1) {
                 switch (message.command) {
                     case 'behaviorInfo1':
                         // Update the UI with the information about the user behavior
