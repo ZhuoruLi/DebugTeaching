@@ -210,14 +210,14 @@
 
             // create the first behavior-info div and append it to the behaviorBox div
             const behaviorInfo1 = document.createElement("div");
-            behaviorInfo1.setAttribute("name", "behavior-info1");
+            behaviorInfo1.setAttribute("class", "behavior-info1");
             behaviorBox.appendChild(behaviorInfo1);
             behaviorInfo1.style.alignSelf = "flex-start";
             behaviorInfo1.style.backgroundColor = "#45E7FD";
 
             // create the second behavior-info div and append it to the behaviorBox div
             const behaviorInfo2 = document.createElement("div");
-            behaviorInfo2.setAttribute("name", "behavior-info2");
+            behaviorInfo2.setAttribute("class", "behavior-info2");
             behaviorBox.appendChild(behaviorInfo2);
             behaviorInfo2.style.alignSelf = "flex-start";
             behaviorInfo2.style.backgroundColor = "#45E7FD";
@@ -306,29 +306,64 @@
         document.getElementById('submitAction').addEventListener("click", addAction);
         window.addEventListener('message', (event) => {
             const message = event.data; // The message data is contained in the event data property
-            switch (message.command) {
-                case 'behaviorInfo1':
-                    // Update the UI with the information about the user behavior
-                    document.getElementById('behavior-info1').innerText = message.info;
-                    //const action = document.getElementById('inputAction').value;
+            if (questions.length == 1) {
+                switch (message.command) {
+                    case 'behaviorInfo1':
+                        // Update the UI with the information about the user behavior
+                        document.getElementById('behavior-info1').innerText = message.info;
+                        //const action = document.getElementById('inputAction').value;
 
-                    break;
-                case 'behaviorInfo2':
-                    document.getElementById('behavior-info2').innerText = message.info;
-                    break;
-                case 'behavior1ChangedLine':
-                    const container = document.createElement('div');
-                    container.setAttribute('class', 'customAction');
-                    container.style.backgroundColor = '#45E7FD';
-                    container.style.color = '#FFF';
-                    const preElement = document.createElement('pre');
-                    const textNode = document.createTextNode(message.info);
-                    preElement.appendChild(textNode);
-                    container.appendChild(preElement);
-                    document.getElementById("behaviorBox").appendChild(container);
-                    break;
+                        break;
+                    case 'behaviorInfo2':
+                        document.getElementById('behavior-info2').innerText = message.info;
+                        break;
+                    case 'behavior1ChangedLine':
+                        const container = document.createElement('div');
+                        container.setAttribute('class', 'customAction');
+                        container.style.backgroundColor = '#45E7FD';
+                        container.style.color = '#FFF';
+                        const preElement = document.createElement('pre');
+                        const textNode = document.createTextNode(message.info);
+                        preElement.appendChild(textNode);
+                        container.appendChild(preElement);
+                        document.getElementById("behaviorBox").appendChild(container);
+                        break;
 
+                }
+            } else {
+                    switch (message.command) {
+                    case 'behaviorInfo1':
+                        // Update the UI with the information about the user behavior
+                        const behaviorInfo1List = document.querySelectorAll(".behavior-info1");
+                        const lastBehaviorInfo1 = behaviorInfo2List[behaviorInfo2List.length - 1];
+
+                        lastBehaviorInfo1.innerText = message.info;
+                        //const action = document.getElementById('inputAction').value;
+
+                        break;
+                    case 'behaviorInfo2':
+                        const behaviorInfo2List = document.querySelectorAll(".behavior-info2");
+                        const lastBehaviorInfo2 = behaviorInfo2List[behaviorInfo2List.length - 1];
+
+                        lastBehaviorInfo2.innerText = message.info;
+                        break;
+                    case 'behavior1ChangedLine':
+                        const container = document.createElement('div');
+                        container.setAttribute('class', 'customAction');
+                        container.style.backgroundColor = '#45E7FD';
+                        container.style.color = '#FFF';
+                        const preElement = document.createElement('pre');
+                        const textNode = document.createTextNode(message.info);
+                        preElement.appendChild(textNode);
+                        container.appendChild(preElement);
+                        const behaviorboxList = document.querySelectorAll(".behaviorBox");
+                        const lastBehaviorbox = behaviorboxList[behaviorboxList.length - 1];
+                        lastBehaviorbox.appendChild(container);
+                        break;
+
+                }
             }
+
         });
 
 
