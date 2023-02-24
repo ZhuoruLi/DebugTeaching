@@ -160,7 +160,7 @@
                 })
                 return;
             }
-            console.log(questions,length);
+            
             const container = document.createElement('div');
             container.setAttribute('class', 'question');
             container.style.backgroundColor = '#45FDC6';
@@ -186,11 +186,77 @@
         
             container.appendChild(preElement);
             document.getElementById("MainPage").appendChild(container);
+            
             vscode.postMessage({
                 command: 'showInput',
                 text:  question
             })
-            
+            // create the main container div and set its id attribute
+            const behaviorBox = document.createElement("div");
+            behaviorBox.setAttribute("class", "behaviorBox");
+            const actionsText = document.createTextNode("Actions: ");
+            behaviorBox.appendChild(actionsText);
+            behaviorBox.style.color = "#FFF";
+            behaviorBox.style.display = "flex";
+            behaviorBox.style.flexDirection = "column";
+            behaviorBox.style.justifyContent = "flex-start";
+            behaviorBox.style.alignItems = "flex-start";
+            behaviorBox.style.width = "70%";
+            behaviorBox.style.height = "auto";
+            behaviorBox.style.backgroundColor = "#45E7FD";
+            behaviorBox.style.borderRadius = "4px";
+            behaviorBox.style.marginLeft = "auto";
+
+            // create the first behavior-info div and append it to the behaviorBox div
+            const behaviorInfo1 = document.createElement("div");
+            behaviorInfo1.setAttribute("name", "behavior-info1");
+            behaviorBox.appendChild(behaviorInfo1);
+            behaviorInfo1.style.alignSelf = "flex-start";
+            behaviorInfo1.style.backgroundColor = "#45E7FD";
+
+            // create the second behavior-info div and append it to the behaviorBox div
+            const behaviorInfo2 = document.createElement("div");
+            behaviorInfo2.setAttribute("name", "behavior-info2");
+            behaviorBox.appendChild(behaviorInfo2);
+            behaviorInfo2.style.alignSelf = "flex-start";
+            behaviorInfo2.style.backgroundColor = "#45E7FD";
+
+            // create the Add-action div and set its id attribute
+            const addAction = document.createElement("div");
+            addAction.setAttribute("name", "Add-action");
+            addAction.style.color = "#FFF";
+            addAction.style.display = "flex";
+            addAction.style.flexDirection = "row";
+            addAction.style.justifyContent = "flex-end";
+            addAction.style.alignItems = "flex-start";
+            addAction.style.width = "70%";
+            addAction.style.borderRadius = "4px";
+            addAction.style.marginLeft = "auto";
+
+            // create the input field and set its type and id attributes
+            const inputAction = document.createElement("input");
+            inputAction.setAttribute("type", "text");
+            inputAction.setAttribute("name", "inputAction");
+
+            // create the "Add Action" button and set its id attribute
+            const submitAction = document.createElement("button");
+            submitAction.setAttribute("name", "submitAction");
+            submitAction.textContent = "Add Action";
+            submitAction.style.backgroundColor = "#45FDC6";
+            submitAction.style.color = "#FFF";
+            submitAction.style.border = "none";
+            submitAction.style.borderRadius = "4px";
+            submitAction.style.padding = "8px";
+            submitAction.style.cursor = "pointer";
+
+            // append the input field and button to the Add-action div
+            addAction.appendChild(inputAction);
+            addAction.appendChild(submitAction);
+
+            // append the behaviorBox and Add-action divs to the document body
+            document.getElementById("MainPage").appendChild(behaviorBox);
+            document.getElementById("MainPage").appendChild(addAction);
+
 
 
         }
