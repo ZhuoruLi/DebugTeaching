@@ -19,11 +19,12 @@
             }
             #msg{
                 background-color: #45FDC6;
-                color: #FFF;
+                color: #020202;
                 width: 60%;
                 border-radius: 4px;
             }
             .container{
+                margin-top: 20px;
                 display: flex;
                 justify-content: flex-start;
                 
@@ -44,7 +45,7 @@
             }
             #submitButton {
                 background-color: #45FDC6;
-                color: #FFF;
+                color: #020202;
                 border: none;
                 border-radius: 4px;
                 padding: 8px;
@@ -52,7 +53,7 @@
             }
             #storeButton {
                 background-color: #45FDC6;
-                color: #FFF;
+                color: #020202;
                 border: none;
                 border-radius: 4px;
                 padding: 8px;
@@ -60,7 +61,7 @@
                 margin-top: 20px;
             }
             #behaviorBox {
-                color: #FFF;
+                color: #020202;
                 display: flex;
                 flex-direction:column;
                 justify-content:flex-start;
@@ -73,7 +74,7 @@
 
             }
             #Add-action {
-                color: #FFF;
+                color: #020202;
                 display: flex;
                 flex-direction:row;
                 justify-content:flex-end;
@@ -85,7 +86,7 @@
             }
             #submitAction {
                 background-color: #45FDC6;
-                color: #FFF;
+                color: #020202;
                 border: none;
                 border-radius: 4px;
                 padding: 8px;
@@ -123,15 +124,16 @@
             <input type="text" id="inputAction">
             <button id="submitAction">Add Action</button>
         </div>
-        <div class="container">
-            <input type="text" id="inputBox">
-            <button id="submitButton">Submit</button>
-        </div>
+
 
         
 
 
 
+    </div>
+    <div class="container">
+        <input type="text" id="inputBox">
+        <button id="submitButton">Submit</button>
     </div>
     <button id="storeButton">Store</button>
     <script>
@@ -168,7 +170,7 @@
             const container = document.createElement('div');
             container.setAttribute('class', 'question');
             container.style.backgroundColor = '#45FDC6';
-            container.style.color = '#FFF';
+            container.style.color = '#020202';
             container.style.width = '60%';
             container.style.borderRadius = '4px';
         
@@ -197,7 +199,7 @@
             behaviorBox.setAttribute("class", "behaviorBox");
             const actionsText = document.createTextNode("Actions: ");
             behaviorBox.appendChild(actionsText);
-            behaviorBox.style.color = "#FFF";
+            behaviorBox.style.color = "#020202";
             behaviorBox.style.display = "flex";
             behaviorBox.style.flexDirection = "column";
             behaviorBox.style.justifyContent = "flex-start";
@@ -225,7 +227,7 @@
             // create the Add-action div and set its id attribute
             const addAction = document.createElement("div");
             addAction.setAttribute("name", "Add-action");
-            addAction.style.color = "#FFF";
+            addAction.style.color = "#020202";
             addAction.style.display = "flex";
             addAction.style.flexDirection = "row";
             addAction.style.justifyContent = "flex-end";
@@ -244,7 +246,7 @@
             submitAction.setAttribute("name", "submitAction");
             submitAction.textContent = "Add Action";
             submitAction.style.backgroundColor = "#45FDC6";
-            submitAction.style.color = "#FFF";
+            submitAction.style.color = "#020202";
             submitAction.style.border = "none";
             submitAction.style.borderRadius = "4px";
             submitAction.style.padding = "8px";
@@ -254,7 +256,7 @@
                 const container = document.createElement('div');
                 container.setAttribute('class', 'customAction');
                 container.style.backgroundColor = '#45E7FD';
-                container.style.color = '#FFF';
+                container.style.color = '#020202';
                 const preElement = document.createElement('pre');
                 const textNode = document.createTextNode(action);
                 preElement.appendChild(textNode);
@@ -321,7 +323,7 @@
                         const container = document.createElement('div');
                         container.setAttribute('class', 'customAction');
                         container.style.backgroundColor = '#45E7FD';
-                        container.style.color = '#FFF';
+                        container.style.color = '#020202';
                         const preElement = document.createElement('pre');
                         const textNode = document.createTextNode(message.info);
                         preElement.appendChild(textNode);
@@ -351,7 +353,7 @@
                         const container = document.createElement('div');
                         container.setAttribute('class', 'customAction');
                         container.style.backgroundColor = '#45E7FD';
-                        container.style.color = '#FFF';
+                        container.style.color = '#020202';
                         const preElement = document.createElement('pre');
                         const textNode = document.createTextNode(message.info);
                         preElement.appendChild(textNode);
