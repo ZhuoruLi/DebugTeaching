@@ -71,6 +71,7 @@
                 background-color: #45E7FD;
                 border-radius: 4px;
                 margin-left: auto;
+                flex-wrap: wrap;
 
             }
             #Add-action {
@@ -138,12 +139,17 @@
     <button id="storeButton">Store</button>
     <script>
         let questions = [];
+        let currentQuestionIndex = questions.length-1;
         function addQuestion() {
             const question = document.getElementById('inputBox').value;
             questions.push(question);
 
             if (questions.length == 1) {
                 console.log(questions,length);
+                const firstdiv = document.getElementById("msg");
+                firstdiv.addEventListener('click', function() {
+                    currentQuestionIndex = -1;
+                });
                 let pre = document.querySelector('#msg pre');
                 pre.textContent = "Questions: " + questions[questions.length - 1];
                 pre.contentEditable = true;
@@ -189,6 +195,10 @@
                     origin:  originQuestion
                 })
             });
+            currentQuestionIndex = questions.length-2;
+            container.addEventListener('click', function() {
+                currentQuestionIndex = Array.from(document.querySelectorAll('.question')).indexOf(container);
+            });
         
             container.appendChild(preElement);
             document.getElementById("MainPage").appendChild(container);
@@ -209,6 +219,7 @@
             behaviorBox.style.backgroundColor = "#45E7FD";
             behaviorBox.style.borderRadius = "4px";
             behaviorBox.style.marginLeft = "auto";
+            
 
             // create the first behavior-info div and append it to the behaviorBox div
             const behaviorInfo1 = document.createElement("div");
@@ -216,6 +227,7 @@
             behaviorBox.appendChild(behaviorInfo1);
             behaviorInfo1.style.alignSelf = "flex-start";
             behaviorInfo1.style.backgroundColor = "#45E7FD";
+            
 
             // create the second behavior-info div and append it to the behaviorBox div
             const behaviorInfo2 = document.createElement("div");
@@ -235,6 +247,7 @@
             addAction.style.width = "70%";
             addAction.style.borderRadius = "4px";
             addAction.style.marginLeft = "auto";
+            
 
             // create the input field and set its type and id attributes
             const inputAction = document.createElement("input");
@@ -290,7 +303,7 @@
             const container = document.createElement('div');
             container.setAttribute('class', 'customAction');
             container.style.backgroundColor = '#45E7FD';
-            container.style.color = '#FFF';
+            container.style.color = '#020202';
             const preElement = document.createElement('pre');
             const textNode = document.createTextNode(action);
             preElement.appendChild(textNode);
@@ -308,7 +321,7 @@
         document.getElementById('submitAction').addEventListener("click", addAction);
         window.addEventListener('message', (event) => {
             const message = event.data; // The message data is contained in the event data property
-            if (questions.length <= 1) {
+            if (questions.length <= 1 || currentQuestionIndex === -1) {
                 switch (message.command) {
                     case 'behaviorInfo1':
                         // Update the UI with the information about the user behavior
@@ -324,20 +337,20 @@
                         container.setAttribute('class', 'customAction');
                         container.style.backgroundColor = '#45E7FD';
                         container.style.color = '#020202';
-                        const preElement = document.createElement('pre');
-                        const textNode = document.createTextNode(message.info);
-                        preElement.appendChild(textNode);
-                        container.appendChild(preElement);
+                        container.style.marginTop = "10px"
+                        container.innerText = message.info;
                         document.getElementById("behaviorBox").appendChild(container);
                         break;
 
                 }
             } else {
-                    switch (message.command) {
+
+
+                switch (message.command) {
                     case 'behaviorInfo1':
                         // Update the UI with the information about the user behavior
                         const behaviorInfo1List = document.querySelectorAll(".behavior-info1");
-                        const lastBehaviorInfo1 = behaviorInfo2List[behaviorInfo2List.length - 1];
+                        const lastBehaviorInfo1 = behaviorInfo2List[currentQuestionIndex];
 
                         lastBehaviorInfo1.innerText = message.info;
                         //const action = document.getElementById('inputAction').value;
@@ -345,7 +358,7 @@
                         break;
                     case 'behaviorInfo2':
                         const behaviorInfo2List = document.querySelectorAll(".behavior-info2");
-                        const lastBehaviorInfo2 = behaviorInfo2List[behaviorInfo2List.length - 1];
+                        const lastBehaviorInfo2 = behaviorInfo2List[currentQuestionIndex];
 
                         lastBehaviorInfo2.innerText = message.info;
                         break;
@@ -354,18 +367,20 @@
                         container.setAttribute('class', 'customAction');
                         container.style.backgroundColor = '#45E7FD';
                         container.style.color = '#020202';
-                        const preElement = document.createElement('pre');
-                        const textNode = document.createTextNode(message.info);
-                        preElement.appendChild(textNode);
-                        container.appendChild(preElement);
+                        container.style.marginTop = "10px"
+                        container.innerText = message.info;
+                        // const preElement = document.createElement('pre');
+                        // const textNode = document.createTextNode(message.info);
+                        // preElement.appendChild(textNode);
+                        // container.appendChild(preElement);
                         const behaviorboxList = document.querySelectorAll(".behaviorBox");
-                        const lastBehaviorbox = behaviorboxList[behaviorboxList.length - 1];
+                        const lastBehaviorbox = behaviorboxList[currentQuestionIndex];
                         lastBehaviorbox.appendChild(container);
                         break;
 
                 }
             }
-
+5
         });
 
 
