@@ -145,10 +145,14 @@
             questions.push(question);
 
             if (questions.length == 1) {
-                console.log(questions,length);
+                
                 const firstdiv = document.getElementById("msg");
                 firstdiv.addEventListener('click', function() {
                     currentQuestionIndex = -1;
+                    vscode.postMessage({
+                        command: 'editGroup',
+                        Qindex: 1
+                    })
                 });
                 let pre = document.querySelector('#msg pre');
                 pre.textContent = "Questions: " + questions[questions.length - 1];
@@ -198,6 +202,10 @@
             currentQuestionIndex = questions.length-2;
             container.addEventListener('click', function() {
                 currentQuestionIndex = Array.from(document.querySelectorAll('.question')).indexOf(container);
+                vscode.postMessage({
+                    command: 'editGroup',
+                    Qindex: currentQuestionIndex+2
+                })
             });
         
             container.appendChild(preElement);
@@ -277,7 +285,8 @@
                 behaviorBox.appendChild(container);
                 vscode.postMessage({
                     command: 'AddAction',
-                    text:  action
+                    text:  action,
+                    Qindex: currentQuestionIndex+2
                 })
             })
 
@@ -297,6 +306,7 @@
             vscode.postMessage({
                 command: 'saveData' 
             });
+            return;
         }
         function addAction() {
             const action = document.getElementById('inputAction').value;
@@ -311,7 +321,8 @@
             document.getElementById("behaviorBox").appendChild(container);
             vscode.postMessage({
                 command: 'AddAction',
-                text:  action
+                text:  action,
+                Qindex: 1
             })
 
         }

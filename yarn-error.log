@@ -1,0 +1,87 @@
+Arguments: 
+  /opt/homebrew/Cellar/node/18.11.0/bin/node /opt/homebrew/bin/yarn add -D @types/csv-parser
+
+PATH: 
+  /opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/Apple/usr/bin:/Users/lizhuoru/Desktop/nand2tetris/tools
+
+Yarn version: 
+  1.22.19
+
+Node version: 
+  18.11.0
+
+Platform: 
+  darwin arm64
+
+Trace: 
+  Error: https://registry.yarnpkg.com/@types%2fcsv-parser: Not found
+      at params.callback [as _callback] (/opt/homebrew/lib/node_modules/yarn/lib/cli.js:66145:18)
+      at self.callback (/opt/homebrew/lib/node_modules/yarn/lib/cli.js:140890:22)
+      at Request.emit (node:events:513:28)
+      at Request.<anonymous> (/opt/homebrew/lib/node_modules/yarn/lib/cli.js:141862:10)
+      at Request.emit (node:events:513:28)
+      at IncomingMessage.<anonymous> (/opt/homebrew/lib/node_modules/yarn/lib/cli.js:141784:12)
+      at Object.onceWrapper (node:events:627:28)
+      at IncomingMessage.emit (node:events:525:35)
+      at endReadableNT (node:internal/streams/readable:1359:12)
+      at process.processTicksAndRejections (node:internal/process/task_queues:82:21)
+
+npm manifest: 
+  {
+    "name": "debuglearning",
+    "displayName": "DebugLearning",
+    "description": "for novice programmer",
+    "version": "0.0.1",
+    "engines": {
+      "vscode": "^1.75.0"
+    },
+    "categories": [
+      "Other"
+    ],
+    "activationEvents": [
+    ],
+    "main": "./out/extension.js",
+    "contributes": {
+      "commands": [
+        {
+          "command": "debuglearning.addbutton",
+          "title": "Add questions"
+        },
+        {
+          "command": "input-display-webview.inputData",
+          "title": "Input Display"
+        },
+        {
+          "command": "behavior-tracker.displayBehaviors",
+          "title": "Behavior Display"
+        }
+      ]
+    },
+    "scripts": {
+      "vscode:prepublish": "npm run compile",
+      "compile": "tsc -p ./",
+      "watch": "tsc -watch -p ./",
+      "pretest": "npm run compile && npm run lint",
+      "lint": "eslint src --ext ts",
+      "test": "node ./out/test/runTest.js"
+    },
+    "devDependencies": {
+      "@types/vscode": "^1.75.0",
+      "@types/glob": "^8.0.1",
+      "@types/mocha": "^10.0.1",
+      "@types/node": "16.x",
+      "@typescript-eslint/eslint-plugin": "^5.49.0",
+      "@typescript-eslint/parser": "^5.49.0",
+      "eslint": "^8.33.0",
+      "glob": "^8.1.0",
+      "mocha": "^10.1.0",
+      "typescript": "^4.9.4",
+      "@vscode/test-electron": "^2.2.2"
+    }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile

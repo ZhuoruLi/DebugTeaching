@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import * as fs from 'fs';
 import * as path from 'path';
+
 import { TextEncoder } from 'util';
 
 type Action = {
@@ -13,9 +14,10 @@ type Question = {
     text: string;
 };
 let currentId = 0;
-let currentGroup = "";
+let currentGroup = 1;
 let behaviorData: Action[] = [];
 let questionData: Question[] = [];
+let shouldTrackChanges = true;
 //let panel: vscode.WebviewPanel | undefined;
 export function activate(context: vscode.ExtensionContext) {
     console.log('Congratulations, your extension "input-display-webview" is now active!');
@@ -48,7 +50,8 @@ export function activate(context: vscode.ExtensionContext) {
 						
                         vscode.window.showInformationMessage(`You entered: ${message.text}`);
                         currentId++;
-                        questionData.push({idGroup:currentId, text: message.text});
+                        currentGroup = currentId;
+                        questionData.push({idGroup:currentGroup, text: message.text});
                         //currentGroup = message.text;
 
                         // behaviorData.push({idGroup:group, timeStamp: Date.now(), changes:});
@@ -64,7 +67,8 @@ export function activate(context: vscode.ExtensionContext) {
                     case 'AddAction':
                         let times = Date.now();
                         let change:string = message.text;
-                        behaviorData.push({idGroup: currentId, timeStamp:times , changes: change});
+                        currentGroup = message.Qindex;
+                        behaviorData.push({idGroup: message.Qindex, timeStamp:times , changes: change});
                         break;
                     case 'editQuestion':
                         vscode.window.showInformationMessage(`Question edit: ${message.origin}`);
@@ -74,6 +78,8 @@ export function activate(context: vscode.ExtensionContext) {
                             }
                         }
                         break;
+                    case 'editGroup':
+                        currentGroup = message.Qindex;
                         
                 
                 }
@@ -87,42 +93,48 @@ export function activate(context: vscode.ExtensionContext) {
         let toprint:string  = "";
         let currentline:number = -1;
         vscode.workspace.onDidChangeTextDocument(event => {
-            if (panel) {
-                const line = event.contentChanges[0].range.start.line;
-                //when change the line, print what changes to the new line, 
-                //also store the current string;
-                if (currentline !== line) {
-                    currentline = line;
-                    let time = Date.now();
-                    let change:string = "Line " + currentline + " changed: "+toprint;
-                    behaviorData.push({idGroup: currentId, timeStamp:time , changes: change});
+            if (shouldTrackChanges) {
+                if (panel) {
+                    const line = event.contentChanges[0].range.start.line;
+                    //when change the line, print what changes to the new line, 
+                    //also store the current string;
+                    if (currentline !== line) {
+                        currentline = line;
+                        let time = Date.now();
+                        let change:string = "Line " + currentline + " changed: "+toprint;
+                        behaviorData.push({idGroup: currentGroup, timeStamp:time , changes: change});
+                        panel.webview.postMessage({
+                            command: 'behavior1ChangedLine',
+                            info: change
+                          });
+                        
+                        toprint = "";
+    
+                    }
+                    toprint += event.contentChanges[0].text;
+                    const behavior = `Line ${line+1} changed: "${toprint}"`;
                     panel.webview.postMessage({
-                        command: 'behavior1ChangedLine',
-                        info: change
-                      });
-                    
-                    toprint = "";
-
+                      command: 'behaviorInfo1',
+                      info: behavior
+                    });
                 }
-                toprint += event.contentChanges[0].text;
-                const behavior = `Line ${line+1} changed: "${toprint}"`;
-                panel.webview.postMessage({
-                  command: 'behaviorInfo1',
-                  info: behavior
-                });
             }
+
         });
 
         vscode.languages.registerCodeActionsProvider("*", {
             provideCodeActions(document, range, context, token) {
-                const behavior = `Code action performed: ${context.diagnostics[0].message}`;
-                const objIndex = behaviorData.findIndex((obj => obj.changes.includes("Line " + currentline)));
-                behaviorData[objIndex].changes += behavior;
-                panel.webview.postMessage({
-                  command: 'behaviorInfo2',
-                  info: behavior
-                });
-                return [];
+                if (shouldTrackChanges) {
+                    const behavior = `Code action performed: ${context.diagnostics[0].message}`;
+                    // const objIndex = behaviorData.findIndex((obj => obj.changes.includes("Line " + currentline)));
+                    // behaviorData[objIndex].changes += behavior;
+                    panel.webview.postMessage({
+                      command: 'behaviorInfo2',
+                      info: behavior
+                    });
+                    return [];
+                }
+
             }
         });
 
@@ -136,6 +148,7 @@ export function activate(context: vscode.ExtensionContext) {
 }
 
 async function saveData() {
+    shouldTrackChanges = false;
     if (!vscode.workspace.workspaceFolders) {
       vscode.window.showErrorMessage("No workspace folder is opened in VS Code.");
       return;
@@ -154,5 +167,7 @@ async function saveData() {
     }
 
 }
+
+
 
 
