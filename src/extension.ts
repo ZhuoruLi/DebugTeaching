@@ -13,6 +13,12 @@ type Question = {
     idGroup: number;
     text: string;
 };
+type ConsoleLog = {
+    text: string;
+    idGroup: number;
+};
+  
+let logs: ConsoleLog[] = [];
 let currentId = 0;
 let currentGroup = 1;
 let behaviorData: Action[] = [];
@@ -21,7 +27,7 @@ let shouldTrackChanges = true;
 //let panel: vscode.WebviewPanel | undefined;
 export function activate(context: vscode.ExtensionContext) {
     console.log('Congratulations, your extension "input-display-webview" is now active!');
-
+    
     let disposable = vscode.commands.registerCommand('input-display-webview.inputData', () => {
         const panel = vscode.window.createWebviewPanel(
             'inputDisplayWebview',
@@ -29,7 +35,9 @@ export function activate(context: vscode.ExtensionContext) {
             vscode.ViewColumn.One,
             {
                 enableScripts: true,
-                localResourceRoots: [vscode.Uri.file(path.join(context.extensionPath, './stylesheet/webstyle.css'))]
+                localResourceRoots: [vscode.Uri.file(path.join(context.extensionPath, './stylesheet/webstyle.css'))],
+                retainContextWhenHidden: true
+                //contentSecurityPolicy: "default-src 'none'; script-src 'unsafe-inline'; style-src vscode-resource: 'unsafe-inline'; img-src vscode-resource: data:; font-src vscode-resource:; connect-src vscode-resource: http: https: ws: wss:;",
 
 
             }
@@ -137,6 +145,23 @@ export function activate(context: vscode.ExtensionContext) {
 
             }
         });
+        // const terminal = vscode.window.createTerminal();
+        // terminal.onData(data => {
+        //     // Do something with the output, e.g. send it to the webview.
+        //   });
+        
+        // if (terminal) {
+        //     terminal.process?.on("data", (data:string) => {
+        //         const logEntry: ConsoleLog = { text: data, idGroup: currentGroup };
+        //         logs.push(logEntry);
+         
+        //         panel.webview.postMessage({
+        //             command: 'showlogs',
+        //             info: data
+        //         });
+        //     });
+        // }
+
 
 
 

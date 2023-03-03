@@ -327,6 +327,7 @@
 
         }
         const vscode = acquireVsCodeApi();
+        //let logout = window.onDidWriteTerminalData(event);
         document.getElementById('submitButton').addEventListener("click", addQuestion);
         document.getElementById('storeButton').addEventListener("click", storeChanges);
         document.getElementById('submitAction').addEventListener("click", addAction);
@@ -352,6 +353,15 @@
                         container.innerText = message.info;
                         document.getElementById("behaviorBox").appendChild(container);
                         break;
+                    // case 'showlogs':
+                    //     const logcontainer = document.createElement('div');
+                    //     logcontainer.setAttribute('class', 'logAction');
+                    //     logcontainer.style.backgroundColor = '#45E7FD';
+                    //     logcontainer.style.color = '#020202';
+                    //     logcontainer.style.marginTop = "10px"
+                    //     logcontainer.innerText = "console output: " + message.info;
+                    //     document.getElementById("behaviorBox").appendChild(container);
+                    //     break;
 
                 }
             } else {
@@ -380,14 +390,21 @@
                         container.style.color = '#020202';
                         container.style.marginTop = "10px"
                         container.innerText = message.info;
-                        // const preElement = document.createElement('pre');
-                        // const textNode = document.createTextNode(message.info);
-                        // preElement.appendChild(textNode);
-                        // container.appendChild(preElement);
                         const behaviorboxList = document.querySelectorAll(".behaviorBox");
                         const lastBehaviorbox = behaviorboxList[currentQuestionIndex];
                         lastBehaviorbox.appendChild(container);
                         break;
+                    // case 'showlogs':
+                    //     const logcontainer = document.createElement('div');
+                    //     logcontainer.setAttribute('class', 'logAction');
+                    //     logcontainer.style.backgroundColor = '#45E7FD';
+                    //     logcontainer.style.color = '#020202';
+                    //     logcontainer.style.marginTop = "10px"
+                    //     logcontainer.innerText = "console output: " + message.info;
+                    //     const behaviorboxList2 = document.querySelectorAll(".behaviorBox");
+                    //     const lastBehaviorbox2 = behaviorboxList2[currentQuestionIndex];
+                    //     lastBehaviorbox2.appendChild(container);
+                    //     break;
 
                 }
             }
