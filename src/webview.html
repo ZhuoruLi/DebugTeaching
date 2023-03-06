@@ -353,15 +353,15 @@
                         container.innerText = message.info;
                         document.getElementById("behaviorBox").appendChild(container);
                         break;
-                    // case 'showlogs':
-                    //     const logcontainer = document.createElement('div');
-                    //     logcontainer.setAttribute('class', 'logAction');
-                    //     logcontainer.style.backgroundColor = '#45E7FD';
-                    //     logcontainer.style.color = '#020202';
-                    //     logcontainer.style.marginTop = "10px"
-                    //     logcontainer.innerText = "console output: " + message.info;
-                    //     document.getElementById("behaviorBox").appendChild(container);
-                    //     break;
+                    case 'showlogs':
+                        const logcontainer = document.createElement('div');
+                        logcontainer.setAttribute('class', 'logAction');
+                        logcontainer.style.backgroundColor = '#45E7FD';
+                        logcontainer.style.color = '#020202';
+                        logcontainer.style.marginTop = "10px"
+                        logcontainer.innerText = "console output: " + message.info;
+                        document.getElementById("behaviorBox").appendChild(container);
+                        break;
 
                 }
             } else {
@@ -394,17 +394,17 @@
                         const lastBehaviorbox = behaviorboxList[currentQuestionIndex];
                         lastBehaviorbox.appendChild(container);
                         break;
-                    // case 'showlogs':
-                    //     const logcontainer = document.createElement('div');
-                    //     logcontainer.setAttribute('class', 'logAction');
-                    //     logcontainer.style.backgroundColor = '#45E7FD';
-                    //     logcontainer.style.color = '#020202';
-                    //     logcontainer.style.marginTop = "10px"
-                    //     logcontainer.innerText = "console output: " + message.info;
-                    //     const behaviorboxList2 = document.querySelectorAll(".behaviorBox");
-                    //     const lastBehaviorbox2 = behaviorboxList2[currentQuestionIndex];
-                    //     lastBehaviorbox2.appendChild(container);
-                    //     break;
+                    case 'showlogs':
+                        const logcontainer = document.createElement('div');
+                        logcontainer.setAttribute('class', 'logAction');
+                        logcontainer.style.backgroundColor = '#45E7FD';
+                        logcontainer.style.color = '#020202';
+                        logcontainer.style.marginTop = "10px"
+                        logcontainer.innerText = "console output: " + message.info;
+                        const behaviorboxList2 = document.querySelectorAll(".behaviorBox");
+                        const lastBehaviorbox2 = behaviorboxList2[currentQuestionIndex];
+                        lastBehaviorbox2.appendChild(container);
+                        break;
 
                 }
             }
