@@ -146,29 +146,6 @@ export function activate(context: vscode.ExtensionContext) {
 
             }
         });
-        // import * as vscode from 'vscode';
-
-        // // Get the active debug console
-        // const console = vscode.debug.activeDebugConsole;
-        // if (console) {
-        //   // Get the console's name and process ID
-        //   const consoleName = console.name;
-        //   const processId = console.processId;
-        
-        //   // Get a stream that represents the console's output
-        //   const stream = vscode.debug.getDebugConsoleStream(consoleName, processId);
-        
-        //   // Read from the stream to extract the terminal output
-        //   const chunks: string[] = [];
-        //   stream.on('data', (chunk) => {
-        //     chunks.push(chunk);
-        //   });
-        //   stream.on('end', () => {
-        //     const output = chunks.join('');
-        //     // Do something with the terminal output
-        //     console.log(output);
-        //   });
-        // }
         
 
 
