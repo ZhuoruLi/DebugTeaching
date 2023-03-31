@@ -104,6 +104,21 @@
                 background-color: #45E7FD;
 
             }
+            .gptsuggestions {
+                display: flex;
+                background-color: #FFFFCC;
+                color: #020202;
+                width: 30%;
+                border-radius: 4px;
+
+                margin-bottom: 20px;
+                padding: 10px;
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-start;
+                align-items: flex-start;
+                flex-wrap: wrap;
+            }
         </style>
     </head>
     <body>
@@ -114,6 +129,7 @@
             <pre>Questions:</pre>
             <ul id="questionList"></ul>
         </div>
+        <div class = "gptsuggestions">Suggestion:</div>
         <div id = "behaviorBox">
             Actions:
             <div id="behavior-info1">
