@@ -192,7 +192,8 @@
                 command: 'showInput',
                 text:  question
             })
-            
+
+            // create the main container div and set its id attribute
             const container = document.createElement('div');
             container.setAttribute('class', 'question');
             container.style.backgroundColor = '#45FDC6';
@@ -226,9 +227,18 @@
         
             container.appendChild(preElement);
             document.getElementById("MainPage").appendChild(container);
+            // create the gpt-suggestions div and set its id attribute
+            const gptSuggestions = document.createElement("div");
+            gptSuggestions.setAttribute("class", "gptsuggestions");
+            //set the inner text of the gpt-suggestions div
+            const gptText = document.createTextNode("Suggestion:");
+            gptSuggestions.appendChild(gptText);
+            //append the gpt-suggestions div to the main container div
+            document.getElementById("MainPage").appendChild(gptSuggestions);
             
 
-            // create the main container div and set its id attribute
+
+            // create the behaviorBox div and set its id attribute
             const behaviorBox = document.createElement("div");
             behaviorBox.setAttribute("class", "behaviorBox");
             const actionsText = document.createTextNode("Actions: ");
