@@ -164,6 +164,16 @@
                 
                 const firstdiv = document.getElementById("msg");
                 firstdiv.addEventListener('click', function() {
+                    //make the container change the color when it is clicked, and change back when other questions are clicked
+                    firstdiv.style.backgroundColor = '#FFA500';
+                    //change the color of the other class questions back to the original color
+                    const otherQuestions = document.querySelectorAll('.question');
+                    otherQuestions.forEach((question) => {
+                        question.style.backgroundColor = '#45FDC6';
+                    })
+                    
+
+
                     currentQuestionIndex = -1;
                     vscode.postMessage({
                         command: 'editGroup',
@@ -218,6 +228,18 @@
             });
             currentQuestionIndex = questions.length-2;
             container.addEventListener('click', function() {
+                //make the container change the color when it is clicked, and change back when other questions are clicked
+                const allQuestions = document.querySelectorAll('.question');
+                allQuestions.forEach(question => {
+                    question.style.backgroundColor = '#45FDC6';
+                });
+                // also change the color of the first question back to blue
+                const firstdiv = document.getElementById("msg");
+                firstdiv.style.backgroundColor = '#45FDC6';
+
+                //I want it become orange when it is clicked
+                container.style.backgroundColor = '#FFA500';
+
                 currentQuestionIndex = Array.from(document.querySelectorAll('.question')).indexOf(container);
                 vscode.postMessage({
                     command: 'editGroup',
